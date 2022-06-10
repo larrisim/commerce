@@ -1,0 +1,18 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+
+    {% for item in items %}
+    <div class="row" style="border: 1px solid gray; border-collapse: collapse; margin: 5px;">
+        <div class="column" style="width: 40%; margin:20px">
+          <p> <img src="{{item.picture}}" alt="alternatetext" style="width:200px; margin-left: 25%;"></p>
+        </div><br>
+        <div class="column" style="width: 50%; margin:20px">
+        <h5><a href="{% url 'listing' item.id %}">{{item.item}}</a></h5>
+        <p><b>Price: ${{item.price}} USD</b></p>
+        <p>{{item.description}}</p>
+    </div>
+      </div><br>
+    {% endfor %}
+{% endblock %}

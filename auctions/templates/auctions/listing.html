@@ -1,0 +1,78 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    
+        {% if item.owner == user %}
+        <form action="{% url 'listing' item.id %}" method ="POST" name="closebid">
+            {% csrf_token %}
+            <h4 style="display: inline;">{{item.item}}</h4>&ensp;
+            <input type="submit" name="close_bid" value="Close Bid">
+        
+            {% else %}
+            <h4>{{item.item}}</h4>
+            {% endif %}
+        </form></p>
+        <b>Category:</b> {{item.category}} &ensp;|&ensp;
+        <b>Seller:</b> {{item.owner}}<br><br>
+
+        <form action="{% url 'listing' item.id %}" method ="POST" name="watchlist">
+            {% csrf_token %}
+            {% if watchlist %}
+                This item is in your watchlist &ensp;
+                <input type="submit" name="remove_from_watchlist" value="Remove from my Watchlist">
+            {% else %}
+                This item is not in your watchlist &ensp;
+                <input type="submit" name="add_to_watchlist" value="Add to my Watchlist">
+            {% endif %}
+            </form><br>
+
+        <div style="border: 1px solid gray; border-collapse: collapse; margin: 5px; size: 20px">
+            <div style="background-color: rgb(199, 199, 199);">
+              <p><b>&ensp; Current Bid: ${{item.price}} USD </b> (current bid winner: 
+                {% if winner %}
+                {% for user in winner %} 
+                    {{user.winner}}) 
+                {% endfor %}
+                {% else %}
+                    None)
+                {% endif %}
+            </p>
+            </div>
+            <div>
+             <form action="{% url 'listing' item.id %}" method ="POST" name="bid" value="bid">
+                {% csrf_token %}
+                &ensp; Make a Bid: $ <input type="number" min="{{item.price}}" name="new_bid" style="width: 100px;"> USD<br><br>
+                &ensp; <input type="submit" value="Submit">
+                </form><br>
+            </div>
+        </div><br>
+
+        <div>
+            <b>Description:</b><br>
+            &ensp; {{item.description}}<br><br></div>
+
+            <b>Product Picture:</b><br><br>
+                <img src="{{item.picture}}" alt="alternatetext" style="width:800px"></li>
+        <br>
+
+        <h4>Comment:</h4>
+        <form action="{% url 'listing' item.id %}" method ="POST" name="comment" value="comment">
+        {% csrf_token %}
+        <textarea cols ="160" row="20" name="comment">&ensp;Make a comment...</textarea><br>
+        <input type="submit" value="Submit">
+        </form><br>
+
+
+        {% for comment in comments %}
+        <div style="border: 1px solid gray; border-collapse: collapse; margin: 5px; size: 100px">
+            <div style="background-color: rgb(199, 199, 199);">
+              <p> &ensp;{{comment.commenter}} said:</p>
+            </div>
+            <div>
+             <p>&emsp;{{comment.comment}}</p>
+            </div>
+        </div>
+          
+        {% endfor %}
+    
+{% endblock %}
